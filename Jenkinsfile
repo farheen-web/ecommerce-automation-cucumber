@@ -2,18 +2,16 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
+   
+        stage('Verify Docker Environment') {
             steps {
-                echo 'Using the Cucumber BDD project workspace'
+                bat 'where docker'
+                bat 'docker --version'
+                bat 'docker compose version'
+                bat 'docker --context default version'
             }
         }
 
-        stage('Run Cucumber Tests with Docker Grid') {
-            steps {
-                bat 'docker --context default compose up --build --abort-on-container-exit --exit-code-from test-runner'
-            }
-        }
     }
 
     post {
