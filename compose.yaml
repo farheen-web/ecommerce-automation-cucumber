@@ -1,0 +1,33 @@
+
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:4.35.0
+    shm_size: 2gb
+    ports:
+      - "4445:4444"
+      - "7901:7900"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:4444/status | grep -q '\"ready\": true'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  test-runner:
+    image: maven:3.9.16-eclipse-temurin-17
+    working_dir: /app
+    depends_on:
+      selenium-chrome:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - cucumber-maven-repo:/root/.m2
+    environment:
+      BROWSER: remote
+      GRID_URL: http://selenium-chrome:4444
+    command: >
+      mvn clean test
+      -Dselenium.grid.url=http://selenium-chrome:4444
+
+volumes:
+  cucumber-maven-repo:
