@@ -6,11 +6,12 @@ pipeline {
         choice(
             name: 'CUCUMBER_TAGS',
             choices: [
-                '@regression',
-                '@smoke',
-                '@negative',
-                '@regression and not @negative'
-            ],
+    '@regression',
+    '@smoke',
+    '@negative',
+    '@regression and not @negative',
+    '@noMatchingScenario'
+],
             description: 'Choose which Cucumber scenarios to execute'
         )
     }
