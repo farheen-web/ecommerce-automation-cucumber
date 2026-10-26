@@ -31,7 +31,9 @@ pipeline {
 
         stage('Run Cucumber Tests with Docker Grid') {
             steps {
-                bat '"%COMPOSE_EXE%" --context default up --abort-on-container-exit --exit-code-from test-runner'
+                withEnv(["CUCUMBER_TAGS=${params.CUCUMBER_TAGS}"]) {
+    bat '"%COMPOSE_EXE%" --context default up --abort-on-container-exit --exit-code-from test-runner'
+}
             }
         }
     }
