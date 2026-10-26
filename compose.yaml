@@ -25,9 +25,11 @@ services:
     environment:
       BROWSER: remote
       GRID_URL: http://selenium-chrome:4444
+      CUCUMBER_TAGS: ${CUCUMBER_TAGS:-@regression}
     command: >
-      mvn clean test
+      sh -c 'mvn clean test
       -Dselenium.grid.url=http://selenium-chrome:4444
+      "-Dcucumber.filter.tags=$$CUCUMBER_TAGS"'
 
 volumes:
   cucumber-maven-repo:

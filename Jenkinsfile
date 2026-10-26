@@ -2,6 +2,19 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'CUCUMBER_TAGS',
+            choices: [
+                '@regression',
+                '@smoke',
+                '@negative',
+                '@regression and not @negative'
+            ],
+            description: 'Choose which Cucumber scenarios to execute'
+        )
+    }
+
     environment {
         COMPOSE_EXE = 'C:\\Users\\farhe\\AppData\\Local\\Programs\\DockerDesktop\\resources\\cli-plugins\\docker-compose.exe'
     }
