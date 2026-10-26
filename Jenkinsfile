@@ -36,6 +36,14 @@ pipeline {
 }
             }
         }
+
+        stage('Validate Cucumber Results') {
+            steps {
+                bat 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\\validate-cucumber-results.ps1'
+            }
+        }
+
+
     }
 
     post {
