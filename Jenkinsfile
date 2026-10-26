@@ -2,7 +2,7 @@
 pipeline {
     agent any
 
-   
+    stages {
         stage('Verify Docker Environment') {
             steps {
                 bat 'where docker'
@@ -12,6 +12,11 @@ pipeline {
             }
         }
 
+        stage('Run Cucumber Tests with Docker Grid') {
+            steps {
+                bat 'docker --context default compose up --build --abort-on-container-exit --exit-code-from test-runner'
+            }
+        }
     }
 
     post {
@@ -25,8 +30,10 @@ pipeline {
                 reportName: 'Cucumber HTML Report'
             ])
 
-            archiveArtifacts artifacts: 'target/cucumber-report.html',
-                             allowEmptyArchive: true
+            archiveArtifacts(
+                artifacts: 'target/cucumber-report.html',
+                allowEmptyArchive: true
+            )
         }
 
         success {
@@ -38,7 +45,10 @@ pipeline {
         }
 
         cleanup {
-            bat 'docker --context default compose down --remove-orphans'
+            bat(
+                returnStatus: true,
+                script: 'docker --context default compose down --remove-orphans'
+            )
         }
     }
 }
