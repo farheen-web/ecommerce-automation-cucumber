@@ -2,19 +2,23 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_EXE = 'C:\\Users\\farhe\\AppData\\Local\\Programs\\DockerDesktop\\resources\\cli-plugins\\docker-compose.exe'
+    }
+
     stages {
         stage('Verify Docker Environment') {
             steps {
                 bat 'where docker'
                 bat 'docker --version'
-                bat 'docker compose version'
+                bat '"%COMPOSE_EXE%" version'
                 bat 'docker --context default version'
             }
         }
 
         stage('Run Cucumber Tests with Docker Grid') {
             steps {
-                bat 'docker --context default compose up --build --abort-on-container-exit --exit-code-from test-runner'
+                bat '"%COMPOSE_EXE%" --context default up --abort-on-container-exit --exit-code-from test-runner'
             }
         }
     }
@@ -47,7 +51,7 @@ pipeline {
         cleanup {
             bat(
                 returnStatus: true,
-                script: 'docker --context default compose down --remove-orphans'
+                script: '"%COMPOSE_EXE%" --context default down --remove-orphans'
             )
         }
     }
